@@ -1,0 +1,42 @@
+Server code (server/): defines mcp_server.py with endpoints for /shell/exec, /fs/read, /fs/write, /git/status, /git/diff, /git/commit, and Excel endpoints for inspect/read/preview/commit.
+
+Tools (server/tools/): self-contained modules (shell.py, fs.py, git_tools.py, excel_mcp.py) with secure path resolution and structured outputs.
+
+Config (server/config.py): allows you to set MCP_ALLOWED_BASE and MAX_READ_BYTES via environment variables.
+
+Requirements (server/requirements.txt): lists the minimal dependencies (FastAPI, uvicorn, pydantic, openpyxl). No third-party file-locking library is required.
+
+README: explains installation, environment variables, endpoint descriptions and example curl commands.
+
+Setup and usage
+
+Unzip the project:
+
+unzip codex_toolset.zip
+cd codex_toolset
+
+
+Install dependencies (Python 3.10+):
+
+pip install -r server/requirements.txt
+
+
+Run the server (default port 8000):
+
+python server/mcp_server.py
+
+
+Optional: set MCP_ALLOWED_BASE before starting to restrict file access:
+
+export MCP_ALLOWED_BASE=/path/to/your/workspace
+python server/mcp_server.py
+
+
+Use any HTTP client (curl, Postman, or function-calling in Codex) to invoke the endpoints. For example:
+
+curl -X POST http://localhost:8000/shell/exec \
+  -H "Content-Type: application/json" \
+  -d '{"cmd":"ls -la", "cwd":"."}'
+
+
+The Excel endpoints support preview/commit workflows; always call excel/preview_write before excel/commit_write to review changes

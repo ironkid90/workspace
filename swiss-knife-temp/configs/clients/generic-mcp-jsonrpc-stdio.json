@@ -1,0 +1,11 @@
+{
+  "server": {
+    "name": "ai-agents-swiss-knife",
+    "transport": "stdio",
+    "command": "ai-agents-swiss-knife-bridge",
+    "args": [],
+    "env": {
+      "MCP_BASE_URL": "http://localhost:8080"
+    }
+  }
+}

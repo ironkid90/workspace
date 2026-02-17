@@ -1,0 +1,18 @@
+<service>
+  <id>ai-agent-swiss-knife</id>
+  <name>AI Agent's Swiss Knife</name>
+  <description>Local MCP server for AI agents</description>
+  <executable>python</executable>
+  <arguments>-m server.mcp_server</arguments>
+  <workingdirectory>..\..</workingdirectory>
+  <logpath>..\..\logs</logpath>
+  <log mode="roll" />
+  <stdout>..\..\logs\server.out.log</stdout>
+  <stderr>..\..\logs\server.err.log</stderr>
+  <startmode>Automatic</startmode>
+  <env name="MCP_HOST" value="0.0.0.0" />
+  <env name="MCP_PORT" value="8000" />
+  <env name="MCP_ALLOWED_BASE" value="..\.." />
+  <env name="MCP_MAX_READ_BYTES" value="200000" />
+  <env name="MCP_EXCEL_LOCK_TIMEOUT_S" value="5" />
+</service>

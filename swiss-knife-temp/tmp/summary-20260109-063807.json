@@ -1,0 +1,27 @@
+{
+  "objective": "Run as local MCP server with localhost GUI",
+  "verification": {
+    "smokeTest": {
+      "result": "health ok; / redirects to /docs",
+      "command": "python -m server.mcp_server (MCP_PORT=8001) + GET /health and GET /"
+    }
+  },
+  "changes": [
+    {
+      "path": "server/mcp_server.py",
+      "note": "Added GET / that redirects to /docs (Swagger UI) for a localhost GUI entrypoint."
+    },
+    {
+      "path": "server/config.py",
+      "note": "Default bind host changed to 127.0.0.1 for safer local default."
+    },
+    {
+      "path": "scripts/run_server.cmd",
+      "note": "Default MCP_HOST set to 127.0.0.1 for local use."
+    },
+    {
+      "path": "README.md",
+      "note": "Documented localhost GUI at http://localhost:8000/ and updated run command to python -m server.mcp_server."
+    }
+  ]
+}
