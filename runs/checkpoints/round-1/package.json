@@ -1,0 +1,27 @@
+{
+  "name": "codex-orch-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "tsc --noEmit -p tsconfig.lint.json",
+    "swarm:cli": "tsx scripts/swarm-cli.ts",
+    "swarm:setup": "tsx scripts/swarm-cli.ts setup",
+    "swarm:run": "tsx scripts/swarm-cli.ts run",
+    "swarm:deploy": "tsx scripts/swarm-cli.ts deploy"
+  },
+  "dependencies": {
+    "next": "16.1.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.3",
+    "@types/react": "19.0.12",
+    "@types/react-dom": "19.0.4",
+    "tsx": "4.20.6",
+    "typescript": "5.8.3"
+  }
+}

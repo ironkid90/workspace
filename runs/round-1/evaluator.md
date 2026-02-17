@@ -1,0 +1,13 @@
+1) STATUS: FAIL
+
+2) FINDINGS:
+- sample
+
+3) PROMPT_UPDATES_W1:
+- sample
+
+4) PROMPT_UPDATES_W2:
+- sample
+
+5) COORDINATION_RULES:
+- sample

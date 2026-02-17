@@ -1,0 +1,71 @@
+{
+  "round": 1,
+  "createdAt": "2026-02-16T04:23:29.193Z",
+  "entries": [
+    {
+      "path": "app",
+      "kind": "dir",
+      "existed": true
+    },
+    {
+      "path": "lib",
+      "kind": "dir",
+      "existed": true
+    },
+    {
+      "path": "prompts",
+      "kind": "dir",
+      "existed": true
+    },
+    {
+      "path": "run-swarm.ps1",
+      "kind": "file",
+      "existed": true
+    },
+    {
+      "path": "README.md",
+      "kind": "file",
+      "existed": true
+    },
+    {
+      "path": "package.json",
+      "kind": "file",
+      "existed": true
+    },
+    {
+      "path": "package-lock.json",
+      "kind": "file",
+      "existed": true
+    },
+    {
+      "path": "next.config.ts",
+      "kind": "file",
+      "existed": true
+    },
+    {
+      "path": "tsconfig.json",
+      "kind": "file",
+      "existed": true
+    },
+    {
+      "path": "AGENTS_ARCHITECTURE.md",
+      "kind": "file",
+      "existed": true
+    },
+    {
+      "path": "AGENTS_KNOWLEDGE.md",
+      "kind": "file",
+      "existed": true
+    },
+    {
+      "path": "AGENTS_ROADMAP.md",
+      "kind": "file",
+      "existed": true
+    },
+    {
+      "path": "DEPENDENCIES.md",
+      "kind": "file",
+      "existed": true
+    }
+  ]
+}
