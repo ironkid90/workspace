@@ -82,5 +82,6 @@ Run state stores:
 ## 6. Human-in-the-Loop Controls
 
 - Pause/resume is available through `/api/swarm/control`.
+- Optional per-agent approval gates can require operator approval before each `act` phase.
 - Rewind requires a paused run for safety.
-- Dashboard surfaces pause state, checkpoint inventory, and rewind actions.
+- Dashboard surfaces pause state, approval gates, checkpoint inventory, and rewind actions.

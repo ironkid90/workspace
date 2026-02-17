@@ -10,6 +10,7 @@ import {
   type EnsembleResult,
   type LintResult,
   type RoundSummary,
+  type PendingApproval,
   type SwarmFeatures,
   type RunMode,
   type SwarmEvent,
@@ -29,6 +30,7 @@ function createInitialState(): SwarmRunState {
     maxRounds: 0,
     running: false,
     paused: false,
+    pendingApproval: undefined,
     currentRound: 0,
     features: { ...DEFAULT_FEATURES },
     agents: createAgentDefaults(),
@@ -80,6 +82,7 @@ class SwarmStore {
       maxRounds: opts.maxRounds,
       running: true,
       paused: false,
+      pendingApproval: undefined,
       startedAt,
       currentRound: 0,
       features,
@@ -106,6 +109,7 @@ class SwarmStore {
     this.state.running = false;
     this.state.paused = false;
     this.state.pauseReason = undefined;
+    this.state.pendingApproval = undefined;
     this.state.endedAt = new Date().toISOString();
     for (const agentId of AGENT_IDS) {
       if (this.state.agents[agentId].phase === "running") {
@@ -125,6 +129,7 @@ class SwarmStore {
     this.state.running = false;
     this.state.paused = false;
     this.state.pauseReason = undefined;
+    this.state.pendingApproval = undefined;
     this.state.endedAt = new Date().toISOString();
     const message = error instanceof Error ? error.message : String(error);
     this.state.errors.push(message);
@@ -150,6 +155,10 @@ class SwarmStore {
 
   setCurrentRound(round: number): void {
     this.state.currentRound = round;
+  }
+
+  setPendingApproval(pending?: PendingApproval): void {
+    this.state.pendingApproval = pending;
   }
 
   setAgentState(

@@ -24,7 +24,7 @@ Execution plan and status for `codex-orch`.
 - [x] Manual rewind capability
 - [x] Auto-rewind trigger on critical regression conditions
 - [x] Pause/resume controls for human-in-the-loop gating
-- [ ] Fine-grained “approve next action” gate before each agent act
+- [x] Fine-grained “approve next action” gate before each agent act
 
 ## Phase 5: Platform Expansion (Planned)
 - [ ] Workflow graph DSL (explicit node/edge registry)
