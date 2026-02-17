@@ -6,6 +6,7 @@ import readline from "node:readline";
 
 import {
   getActiveRunPromise,
+  approveSwarmPendingAction,
   pauseSwarmRun,
   resumeSwarmRun,
   rewindSwarmToRound,
@@ -216,7 +217,7 @@ function printUsage(): void {
   console.log("  run [--max-rounds N]        Run swarm in terminal (interactive controls)");
   console.log("      [--mode local|demo] [--workspace PATH]");
   console.log("      [--no-lintLoop --no-ensembleVoting --no-researchAgent --no-contextCompression]");
-  console.log("      [--no-heuristicSelector --no-checkpointing --no-humanInLoop]");
+  console.log("      [--no-heuristicSelector --no-checkpointing --no-humanInLoop --no-approveNextActionGate]");
   console.log("      [--non-interactive]");
   console.log("  deploy [--path PATH]        One-click Vercel preview deploy");
   console.log("      [--prod]");
@@ -337,6 +338,7 @@ function makeFeatures(flags: Map<string, string | boolean>): SwarmFeatures {
     heuristicSelector: flagBoolean(flags, "heuristicSelector", true),
     checkpointing: flagBoolean(flags, "checkpointing", true),
     humanInLoop: flagBoolean(flags, "humanInLoop", true),
+    approveNextActionGate: flagBoolean(flags, "approveNextActionGate", false),
   };
 }
 
@@ -377,7 +379,7 @@ async function runCommandInteractive(flags: Map<string, string | boolean>): Prom
       output: process.stdout,
       prompt: "swarm> ",
     });
-    console.log("Controls: pause | resume | rewind <round> | status | help");
+    console.log("Controls: pause | resume | approve | rewind <round> | status | help");
     rl.prompt();
     rl.on("line", (line) => {
       const trimmed = line.trim();
@@ -395,6 +397,13 @@ async function runCommandInteractive(flags: Map<string, string | boolean>): Prom
           console.log(ok ? "Run resumed." : "Resume not applied.");
           return;
         }
+        if (trimmed === "approve") {
+          const ok = approveSwarmPendingAction();
+          console.log(ok ? "Pending action approved." : "No pending approval gate.");
+          rl?.prompt();
+          return;
+        }
+
         if (trimmed.startsWith("rewind ")) {
           const round = Number(trimmed.split(/\s+/)[1]);
           if (!Number.isFinite(round)) {
@@ -414,7 +423,7 @@ async function runCommandInteractive(flags: Map<string, string | boolean>): Prom
           return;
         }
         if (trimmed === "help") {
-          console.log("pause | resume | rewind <round> | status");
+          console.log("pause | resume | approve | rewind <round> | status");
           return;
         }
         console.log("Unknown command. Type `help`.");

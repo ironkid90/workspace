@@ -11,7 +11,7 @@ This repository now includes a real-time swarm dashboard with:
 - SSE stream at `api/swarm/stream`.
 - Snapshot API at `api/swarm/state`.
 - Start API at `api/swarm/start`.
-- Control API at `api/swarm/control` for pause/resume/rewind.
+- Control API at `api/swarm/control` for pause/resume/rewind/approval.
 - MGX-style operations UI:
 - Agent cards with phase + excerpts.
 - Round decision panel.
@@ -78,6 +78,7 @@ Interactive terminal controls during `swarm:run`:
 - `resume`
 - `rewind <round>`
 - `status`
+- `approve` (when an approval gate is pending)
 
 Notes:
 

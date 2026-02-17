@@ -91,6 +91,14 @@ export interface SwarmFeatures {
   heuristicSelector: boolean;
   checkpointing: boolean;
   humanInLoop: boolean;
+  approveNextActionGate: boolean;
+}
+
+export interface PendingApproval {
+  round: number;
+  agentId: AgentId;
+  gate: string;
+  requestedAt: string;
 }
 
 export interface SwarmRunState {
@@ -101,6 +109,7 @@ export interface SwarmRunState {
   running: boolean;
   paused: boolean;
   pauseReason?: string;
+  pendingApproval?: PendingApproval;
   startedAt?: string;
   endedAt?: string;
   currentRound: number;
@@ -131,6 +140,7 @@ export const DEFAULT_FEATURES: SwarmFeatures = {
   heuristicSelector: true,
   checkpointing: true,
   humanInLoop: true,
+  approveNextActionGate: false,
 };
 
 export function createAgentDefaults(): Record<AgentId, AgentState> {

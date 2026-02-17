@@ -360,6 +360,38 @@ async function waitIfPaused(round: number, gate: string): Promise<void> {
   }
 }
 
+
+
+async function waitForApprovalGate(round: number, agentId: AgentId, gate: string, enabled: boolean): Promise<void> {
+  if (!enabled) {
+    return;
+  }
+
+  const requestedAt = nowIso();
+  swarmStore.setPendingApproval({ round, agentId, gate, requestedAt });
+  swarmStore.appendEvent({
+    type: "run.approval_requested",
+    round,
+    agentId,
+    message: `Approval required before ${agentId} action (${gate}).`,
+    metadata: { gate, requestedAt },
+  });
+
+  for (;;) {
+    const state = swarmStore.getState();
+    if (!state.running) {
+      swarmStore.setPendingApproval(undefined);
+      throw new Error("Run no longer active.");
+    }
+    const pending = state.pendingApproval;
+    const waitingForCurrentGate =
+      pending && pending.round === round && pending.agentId === agentId && pending.gate === gate;
+    if (!waitingForCurrentGate) {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 400));
+  }
+}
 async function runCodexTask(task: AgentTask): Promise<void> {
   const codexBin = process.env.SWARM_CODEX_BIN || "codex";
   const args = [
@@ -439,6 +471,12 @@ async function runAgentTask(task: AgentTask): Promise<AgentTaskResult> {
 
   try {
     await waitIfPaused(task.round, `${task.agentId}-act`);
+    await waitForApprovalGate(
+      task.round,
+      task.agentId,
+      `${task.agentId}-act`,
+      swarmStore.getState().features.approveNextActionGate,
+    );
     if (task.mode === "demo") {
       await runDemoTask(task);
     } else {
@@ -554,6 +592,14 @@ async function runResearch(
   setPda("research", round, "perceive");
   setPda("research", round, "decide");
   setPda("research", round, "act");
+
+  await waitIfPaused(round, "research-act");
+  await waitForApprovalGate(
+    round,
+    "research",
+    "research-act",
+    swarmStore.getState().features.approveNextActionGate,
+  );
 
   if (mode === "demo") {
     await writeFile(outFile, demoOutput("research", round), "utf8");
@@ -1217,6 +1263,22 @@ export function resumeSwarmRun(): boolean {
     return false;
   }
   swarmStore.setPaused(false);
+  return true;
+}
+
+export function approveSwarmPendingAction(): boolean {
+  const state = swarmStore.getState();
+  if (!state.running || !state.pendingApproval) {
+    return false;
+  }
+  swarmStore.appendEvent({
+    type: "run.approval_granted",
+    round: state.pendingApproval.round,
+    agentId: state.pendingApproval.agentId,
+    message: `Approval granted for ${state.pendingApproval.agentId} (${state.pendingApproval.gate}).`,
+    metadata: { gate: state.pendingApproval.gate },
+  });
+  swarmStore.setPendingApproval(undefined);
   return true;
 }
 

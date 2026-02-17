@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
-import { pauseSwarmRun, resumeSwarmRun, rewindSwarmToRound } from "@/lib/swarm/engine";
+import { approveSwarmPendingAction, pauseSwarmRun, resumeSwarmRun, rewindSwarmToRound } from "@/lib/swarm/engine";
 import { swarmStore } from "@/lib/swarm/store";
 
 export const dynamic = "force-dynamic";
 
 interface ControlPayload {
-  action?: "pause" | "resume" | "rewind";
+  action?: "pause" | "resume" | "rewind" | "approve";
   reason?: string;
   round?: number;
 }
@@ -42,6 +42,16 @@ export async function POST(request: Request) {
         action,
         state: swarmStore.getState(),
         message: ok ? "Run resumed." : "Run was not resumed.",
+      });
+    }
+
+    if (action === "approve") {
+      const ok = approveSwarmPendingAction();
+      return NextResponse.json({
+        ok,
+        action,
+        state: swarmStore.getState(),
+        message: ok ? "Pending action approved." : "No pending approval gate.",
       });
     }
 

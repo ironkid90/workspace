@@ -21,6 +21,7 @@ const DEFAULT_FEATURES: SwarmFeatures = {
   heuristicSelector: true,
   checkpointing: true,
   humanInLoop: true,
+  approveNextActionGate: false,
 };
 
 function eventBadge(status: string): { text: string; cls: string } {
@@ -124,7 +125,7 @@ export default function HomePage() {
     }
   }, [features, loadState, maxRounds, mode]);
 
-  const controlRun = useCallback(async (action: "pause" | "resume" | "rewind", round?: number) => {
+  const controlRun = useCallback(async (action: "pause" | "resume" | "rewind" | "approve", round?: number) => {
     setBusy(true);
     setError(null);
     try {
@@ -162,6 +163,7 @@ export default function HomePage() {
   const runBadge = eventBadge(state?.rounds.at(-1)?.status ?? "IDLE");
   const isRunning = Boolean(state?.running);
   const latestCheckpointRound = state?.checkpoints.at(-1)?.round;
+  const pendingApproval = state?.pendingApproval;
 
   const toggleFeature = useCallback((feature: keyof SwarmFeatures) => {
     if (isRunning) {
@@ -236,6 +238,11 @@ export default function HomePage() {
               Resume
             </button>
           )}
+          {isRunning && pendingApproval && (
+            <button className="btn alt" onClick={() => void controlRun("approve")} disabled={busy}>
+              Approve {pendingApproval.agentId} r{pendingApproval.round}
+            </button>
+          )}
           {supportsRewind && state?.paused && latestCheckpointRound && (
             <button
               className="btn alt"
@@ -250,7 +257,7 @@ export default function HomePage() {
 
         <div className="meta">
           Run ID: {state?.runId ?? "-"} | Mode: {state?.mode ?? "-"} | Round: {state?.currentRound ?? 0} |
-          Paused: {state?.paused ? "yes" : "no"}
+          Paused: {state?.paused ? "yes" : "no"} | Approval gate: {pendingApproval ? `${pendingApproval.agentId}@r${pendingApproval.round}` : "none"}
         </div>
 
         <section className="card featurePanel">
